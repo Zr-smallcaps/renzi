@@ -1,7 +1,6 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
-      <!-- 主体内容的占位 -->
       <router-view :key="key" />
     </transition>
   </section>

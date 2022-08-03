@@ -11,18 +11,20 @@ export function login(data) {
     data
   })
 }
-
-export function getInfo(token) {
+/**
+ * 获取用户信息
+ * @returns  promise
+ */
+export function getUserInfoApi() {
   return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    params: { token }
+    url: '/sys/profile',
+    method: 'post'
   })
 }
 
-export function logout() {
+export function getUserDetailInfoApi(id) {
   return request({
-    url: '/vue-admin-template/user/logout',
-    method: 'post'
+    url: `/sys/user/${id}`,
+    method: 'get'
   })
 }

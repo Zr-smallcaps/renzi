@@ -1,5 +1,8 @@
 import axios from 'axios'
 import { Message } from 'element-ui';
+import store from '@/store';
+import router from '@/router';
+import { getTokenTime } from './auth';
 // create an axios instance
 const service = axios.create({
   baseURL:process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -10,14 +13,22 @@ const service = axios.create({
 
 // request interceptor
 service.interceptors.request.use(
-/*   config => {
-    // do something before request is sent
+  // 每次请求都会返回config配置
+  config => {
+    if (store.state.user.token) {
+      // 判断token有没有过期
+      const currentTime = Date.now()
+      const times= 1000*1000
+      if(currentTime-getTokenTime()>times){
+        console.log('跳到登录页面')
+       store.dispatch('user/logout').then(
+       router.push('/login')
+     )
+       return Promise.reject(new Error('登录过期'));
 
-    if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+      }else{
+         config.headers['Authorization'] = 'Bearer '+ store.state.user.token
+     }
     }
     return config
   },
@@ -26,7 +37,6 @@ service.interceptors.request.use(
     console.log(error) // for debug
     return Promise.reject(error)
   } 
-*/
 )
 
 // 响应拦截器
@@ -40,7 +50,15 @@ service.interceptors.response.use((res)=>{
   return Promise.reject(new Error(message));
 },
 (error)=>{
-  Message.error('系统异常')
+  if(error?.response?.status===401){
+  console.log('响应回来的',error)
+  Message.error('登录过期')
+  store.dispatch('user/logout').then(
+    router.push('/login'))
+  }else{
+    console.dir('token过期',error)
+    Message.error(error.message)
+  }
   return Promise.reject(error);
 }
 
