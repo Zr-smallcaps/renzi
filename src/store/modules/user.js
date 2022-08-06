@@ -27,7 +27,6 @@ const actions = {
     context.commit('SETTOKEN',data)
   },
   async  getUserInfo(context){
-    // 
    const UserBaseInfo =await getUserInfoApi()
    const UserDetailInfo = await getUserDetailInfoApi(UserBaseInfo.userId)
    context.commit('GETUSERINFO',{...UserBaseInfo,...UserDetailInfo})

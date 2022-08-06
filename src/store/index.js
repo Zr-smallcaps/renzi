@@ -18,7 +18,7 @@ const store = new Vuex.Store({
   plugins:[
     createVuexPersisted({
       reducer(state){
-        console.log(state,'state')
+        //console.log(state,'state')
         return {
           user:{
             token:state.user.token

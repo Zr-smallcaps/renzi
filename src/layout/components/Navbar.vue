@@ -33,7 +33,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import  defaultImg from '@/assets/common/head.jpg'
+import defaultImg from '@/assets/common/head.jpg'
 
 export default {
   data() {
@@ -147,7 +147,7 @@ export default {
           cursor: pointer;
           width: 40px;
           height: 40px;
-          border-radius: 10px;
+          border-radius: 20px;
         }
 
         .el-icon-caret-bottom {

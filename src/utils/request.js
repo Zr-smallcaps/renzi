@@ -41,7 +41,7 @@ service.interceptors.request.use(
 
 // 响应拦截器
 service.interceptors.response.use((res)=>{
-  console.log(res)
+ // console.log(res)
   const { success , message , data } = res.data
   if(success){
     return data
@@ -51,12 +51,12 @@ service.interceptors.response.use((res)=>{
 },
 (error)=>{
   if(error?.response?.status===401){
-  console.log('响应回来的',error)
+  // console.log('响应回来的',error)
   Message.error('登录过期')
   store.dispatch('user/logout').then(
     router.push('/login'))
   }else{
-    console.dir('token过期',error)
+    // console.dir('token过期',error)
     Message.error(error.message)
   }
   return Promise.reject(error);
