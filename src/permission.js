@@ -5,12 +5,12 @@ import store from '@/store'
 // 路由（全局）前置守卫
 // 会在所有的路由跳转之前触发
 const whiteList = ['/login','/404']
-router.beforeEach((to,from,next)=>{
+router.beforeEach( async(to,from,next)=>{
     // 如果用户已经登录
     if(store.state.user.token){
         // 如果有token 但是没有用户有信息的话就获取用户信息
         if(!store.state.user.userInfo.userId){
-            store.dispatch('user/getUserInfo')
+          await  store.dispatch('user/getUserInfo')
         }
         // 是否进入登录页
         if(to.path==='/login'){

@@ -65,25 +65,26 @@ export default {
   methods: {
     async handleLogin() {
       this.isLoading = true
-        await this.$refs.loginForm.validate(async (success, error) => {
-          if (success) {
-            try {
-              await this.$store.dispatch('user/setToken', this.loginForm)
-              this.$router.push('/')
-              this.$message({
-                message: '登录成功',
-                type: 'success',
-              })
-            } catch (error) {
-              this.$message({
-                message: '登录失败',
-                type: 'error',
-              })
-            } finally {
-              this.isLoading = false
-            }
+      await this.$refs.loginForm.validate(async (success, error) => {
+        if (success) {
+          try {
+            await this.$store.dispatch('user/setToken', this.loginForm)
+            this.$router.push('/')
+            this.$message({
+              message: '登录成功',
+              type: 'success',
+            })
+          } catch (error) {
+            console.log(error)
+            this.$message({
+              message: '登录失败',
+              type: 'error',
+            })
+          } finally {
+            this.isLoading = false
           }
-        })
+        }
+      })
     },
   },
 }

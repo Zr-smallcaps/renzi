@@ -2,7 +2,8 @@ import axios from 'axios'
 import { Message } from 'element-ui';
 import store from '@/store';
 import router from '@/router';
-import { getTokenTime } from './auth';
+import { getTokenTime } from './auth.js';
+console.log(getTokenTime)
 // create an axios instance
 const service = axios.create({
   baseURL:process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -18,7 +19,7 @@ service.interceptors.request.use(
     if (store.state.user.token) {
       // 判断token有没有过期
       const currentTime = Date.now()
-      const times= 1000*1000
+      const times= 1000*1000000
       if(currentTime-getTokenTime()>times){
         console.log('跳到登录页面')
        store.dispatch('user/logout').then(
@@ -46,6 +47,7 @@ service.interceptors.response.use((res)=>{
   if(success){
     return data
   }
+  console.log(132)
   Message.error(message);
   return Promise.reject(new Error(message));
 },
