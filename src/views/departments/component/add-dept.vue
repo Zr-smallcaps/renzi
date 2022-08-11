@@ -173,7 +173,7 @@ export default {
           await putEditDeptsInfoByIdApi(this.formData.id, this.formData)
           this.$message.success('编辑成功')
           this.onClose()
-          this.$emit('getDepts')
+          this.$emit('remove')
         } catch (error) {
           this.$message.error('编辑失败,稍后再试')
         }
