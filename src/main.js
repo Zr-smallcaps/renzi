@@ -21,6 +21,16 @@ Object.keys(directives).forEach(key => {
   // 注册自定义指令
   Vue.directive(key, directives[key])
 })
+
+// 同一注册过滤器
+ import * as filters from '@/filters/index.js'
+ for(let key in filters){
+   Vue.filter(key,filters[key])
+
+ }
+// Object.keys(filters).forEach(key=>{
+//   Vue.filter(key,filters[key])
+// })
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -41,6 +51,11 @@ Vue.use(ElementUI, { locale } )
 // production 生产  打包上线 （除掉一些报错）
 // dev :devwlopment 开发
 // test 测试
+
+// 引入全局组件
+import components from '@/components'
+Vue.use(components)
+
 
 Vue.config.productionTip = false
 
