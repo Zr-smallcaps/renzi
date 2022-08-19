@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="app-container">
-      <UploadExcel :beforeUpload='beforeUpload' :onSuccess='onSuccess '></UploadExcel>
+      <UploadExcel :beforeUpload='beforeUpload' :onSuccess='onSuccess'></UploadExcel>
     </div>
   </div>
 </template>

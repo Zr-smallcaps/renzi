@@ -21,10 +21,14 @@ Object.keys(directives).forEach(key => {
   // 注册自定义指令
   Vue.directive(key, directives[key])
 })
+import Print from 'vue-print-nb'
+// Global instruction 
+Vue.use(Print);
 
 // 同一注册过滤器
  import * as filters from '@/filters/index.js'
  for(let key in filters){
+  console.log(key)
    Vue.filter(key,filters[key])
 
  }

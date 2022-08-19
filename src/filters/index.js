@@ -1,4 +1,4 @@
 import dayjs from 'dayjs'
- export const fromatTime = (value)=>{
+ export const formatTime = (value)=>{
   return dayjs(value).format('YYYY-MM-DD')
 }

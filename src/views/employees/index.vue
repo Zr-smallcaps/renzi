@@ -5,7 +5,7 @@
         <span slot="left-tag">共166条记录</span>
         <template slot="right">
           <el-button size="small" type="warning" @click="$router.push('/import')">导入</el-button>
-          <el-button size="small" type="danger">导出</el-button>
+          <el-button size="small" type="danger" @click="exportExcel">导出</el-button>
           <el-button size="small" type="primary" @click="addEmployees">新增员工</el-button>
         </template>
       </PageTools>
@@ -16,7 +16,7 @@
           <el-table-column label="姓名" prop="username" sortable="" />
           <el-table-column label="员工">
             <template slot-scope="{row}">
-              <img v-imgError='require("@/assets/smallcaps.jpg")' :style='{width:"100px",height:"100px",borderRadius:"50%"}' :src="row.staffPhoto" alt="">
+              <img v-imgError='require("@/assets/smallcaps.jpg")' :style='{width:"100px",height:"100px",borderRadius:"50%"}' :src="row.staffPhoto" alt="" @click='showQRcode(row.staffPhoto)'>
             </template>
           </el-table-column>
 
@@ -36,7 +36,7 @@
           </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
             <template slot-scope="{row}">
-              <el-button type="text" size="small">查看</el-button>
+              <el-button type="text" size="small" @click="$router.push('/employees/detail/'+row.id)">查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
@@ -44,24 +44,32 @@
               <el-button type="text" size="small" @click="removeEmployee(row.id)">删除</el-button>
             </template>
           </el-table-column>
+          
         </el-table>
         <!-- 分页组件 -->
         <el-row type="flex" justify="center" align="middle" style="height: 60px">
           <el-pagination layout="prev, pager, next" :total="total" :page-size="pages.size" @current-change="changePage" />
         </el-row>
+        <AddEmployees :addEmployeesVisible.sync='addEmployeesVisible' @add-success='getEmployeesList'></AddEmployees>
+        <el-dialog title="头像二维码" :visible='showQRcodeDialog' @close='showQRcodeDialog=false'>
+          <canvas id="canvas"></canvas>
+        </el-dialog>
       </el-card>
     </div>
-    <AddEmployees :addEmployeesVisible.sync='addEmployeesVisible' @add-success='getEmployeesList'></AddEmployees>
   </div>
 </template>
 
 <script>
 import { getEmployeesListApi, getDeleteEmployeesApi } from '@/api/employees'
-import emloyees from '@/constant/employees'
 import AddEmployees from './components/AddEmployees.vue'
+import employees from '../../constant/employees'
+import QRCode from 'qrcode'
+const { exportExcelMapPath, hireType } = employees
 export default {
   data() {
     return {
+      hireType,
+      exportExcelMapPath,
       emloyeesList: [],
       pages: {
         page: 1,
@@ -69,6 +77,7 @@ export default {
       },
       total: 0,
       addEmployeesVisible: false,
+      showQRcodeDialog: false,
     }
   },
   components: { AddEmployees },
@@ -77,6 +86,16 @@ export default {
   },
 
   methods: {
+    showQRcode(staffPhoto) {
+      if (!staffPhoto) {
+        return this.$message.error('此用户没有上传照片')
+      }
+      this.showQRcodeDialog = true
+      this.$nextTick(() => {
+        const canvas = document.getElementById('canvas')
+        QRCode.toCanvas(canvas, staffPhoto)
+      })
+    },
     async getEmployeesList() {
       const { rows, total } = await getEmployeesListApi(this.pages)
       this.emloyeesList = rows
@@ -87,7 +106,7 @@ export default {
       this.getEmployeesList()
     },
     formatterOfEmployment(row, column, cellValue, index) {
-      const formatter = emloyees.hireType.find((item) => {
+      const formatter = hireType.find((item) => {
         return item.id === cellValue
       })
       return formatter ? formatter.value : '未知'
@@ -99,6 +118,37 @@ export default {
     },
     addEmployees() {
       this.addEmployeesVisible = true
+    },
+    async exportExcel() {
+      const { rows, total } = await getEmployeesListApi({
+        page: 1,
+        size: this.total,
+      })
+
+      const header = Object.keys(exportExcelMapPath)
+      // data数据
+      const data = rows.map((item) => {
+        return header.map((value) => {
+          if (value === '聘用形式') {
+            const findItem = hireType.find((hire) => {
+              return hire.id === item[exportExcelMapPath[value]]
+            })
+            return findItem ? findItem.value : '未知'
+          } else {
+            return item[exportExcelMapPath[value]]
+          }
+        })
+      })
+
+      await import('@/vendor/Export2Excel').then((excel) => {
+        excel.export_json_to_excel({
+          header, //表头 必填
+          data, //具体数据 必填
+          filename: '员工列表', //非必填
+          autoWidth: true, //非必填
+          bookType: 'xlsx', //非必填
+        })
+      })
     },
   },
 }

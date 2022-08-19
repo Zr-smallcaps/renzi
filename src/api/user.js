@@ -28,3 +28,12 @@ export function getUserDetailInfoApi(id) {
     method: 'get'
   })
 }
+
+
+export function saveUserDetailInfoApi(data) {
+  return request({
+    url: `/sys/user/${data.id}`,
+    method: 'put',
+    data
+  })
+}
