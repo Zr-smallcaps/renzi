@@ -1,10 +1,6 @@
 <template>
   <div class="navbar">
-    <hamburger
-      :is-active="sidebar.opened"
-      class="hamburger-container"
-      @toggleClick="toggleSideBar"
-    />
+    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
     <!-- <breadcrumb class="breadcrumb-container" /> -->
     <div class="app-breadcrumb">
@@ -13,13 +9,13 @@
     </div>
 
     <div class="right-menu">
+
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img
-            :src="$store.state.user.userInfo.staffPhoto + '123'"
-            class="user-avatar"
-            v-imgError="defaultImg"
-          />
+          <ToggleLang></ToggleLang>
+          <Fullsreen></Fullsreen>
+
+          <img :src="$store.state.user.userInfo.staffPhoto + '123'" class="user-avatar" v-imgError="defaultImg" />
           <span>{{ $store.state.user.userInfo.username }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
@@ -41,6 +37,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import defaultImg from '@/assets/common/head.jpg'
+import Fullsreen from '@/components/FullScreen'
 
 export default {
   // 如果想在data中定义本地图片路径,需要先引入
@@ -52,6 +49,7 @@ export default {
   components: {
     Breadcrumb,
     Hamburger,
+    Fullsreen,
   },
   computed: {
     ...mapGetters(['sidebar', 'avatar']),

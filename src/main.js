@@ -12,6 +12,8 @@ import '@/styles/test.scss'
 import App from './App'
 import store from './store'
 import router from './router'
+// 导入语言
+import i18n from '@/I18n/index'
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -41,6 +43,9 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
+Vue.use(ElementUI, {
+  i18n: (key, value) => i18n.t(key, value)
+})
 
 // 注册element ui
 Vue.use(ElementUI, { locale })
@@ -58,5 +63,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: (h) => h(App),
 })

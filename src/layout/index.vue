@@ -1,10 +1,6 @@
 <template>
   <div :class="classObj" class="app-wrapper">
-    <div
-      v-if="device === 'mobile' && sidebar.opened"
-      class="drawer-bg"
-      @click="handleClickOutside"
-    />
+    <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <!-- 侧边栏 -->
     <sidebar class="sidebar-container" />
     <!-- 主体内容 -->
@@ -13,6 +9,8 @@
       <div :class="{ 'fixed-header': fixedHeader }">
         <!-- 头部navbar组件 -->
         <navbar />
+        <!-- 标签 -->
+        <TagsView></TagsView>
       </div>
       <!-- 肯定是子路由占位 -->
       <app-main />
@@ -21,7 +19,7 @@
 </template>
 
 <script>
-import { Navbar, Sidebar, AppMain } from './components'
+import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 
 export default {
@@ -30,6 +28,7 @@ export default {
     Navbar,
     Sidebar,
     AppMain,
+    TagsView,
   },
   mixins: [ResizeMixin],
   computed: {
